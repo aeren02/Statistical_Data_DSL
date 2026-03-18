@@ -41,6 +41,8 @@ ASTCommand toAST(Element el) {
             return visualisePie("<target>", "<col>");
         case (Element)`Visualise <Identifier target> on <Identifier col> using barChart`:
             return visualiseBar("<target>", "<col>");
+        case (Element)`Visualise <Identifier target> on <Identifier xCol> vs <Identifier yCol> using trendLine`:
+            return visualiseTrend("<target>", "<xCol>", "<yCol>");
         default: throw "Unknown Command Type";
     }
 }

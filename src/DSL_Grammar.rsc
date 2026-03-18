@@ -15,6 +15,7 @@ syntax Element
   | groupByAgg: "GroupBy" Identifier "by" Identifier AggType Identifier "(" RowType ")" 
   | visualisePie: "Visualise" Identifier "on" Identifier "using" "pieChart"
   | visualiseBar: "Visualise" Identifier "on" Identifier "using" "barChart"
+  | visualiseTrend: "Visualise" Identifier "on" Identifier "vs" Identifier "using" "trendLine"
   ;
 
 lexical Identifier

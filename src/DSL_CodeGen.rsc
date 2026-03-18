@@ -10,6 +10,7 @@ str generate(ASTProgram program) {
     str code = "import csv\n\n";
     bool needsTabulate = false;
     bool needsMatplotlib = false;
+    bool needsNumpy = false;
 
     for (cmd <- program.commands) {
         if (cmd is visualise) {
@@ -26,6 +27,10 @@ str generate(ASTProgram program) {
         if (cmd is visualiseBar) {
             needsMatplotlib = true;
         }
+        if (cmd is visualiseTrend) {
+            needsMatplotlib = true;
+            needsNumpy = true;
+        }
     }
 
     if (needsTabulate) code += "from tabulate import tabulate\n";
@@ -33,6 +38,9 @@ str generate(ASTProgram program) {
         code += "import matplotlib\n";
         code += "matplotlib.use(\'Agg\')\n";
         code += "import matplotlib.pyplot as plt\n";
+    }
+    if (needsNumpy) {
+        code += "import numpy as np\n";
     }
 
     code += "\n";
@@ -63,6 +71,9 @@ str genCommand(ASTCommand command) {
         }
         case visualiseBar(name, col): {
             return genVisualiseBar(name, col);
+        }
+        case visualiseTrend(name, xCol, yCol): {
+            return genVisualiseTrend(name, xCol, yCol);
         }
         case rename(source, oldCol, newCol): {
             return genRename(source, oldCol, newCol);
@@ -421,4 +432,35 @@ str getAggName(ASTAggType aggType) {
         case aggMax(): return "max";
         default: throw "Unknown aggregation type";
     }
+}
+
+str genVisualiseTrend(str dataName, str xCol, str yCol) {
+    return
+"
+# visualise <dataName> on <xCol> vs <yCol> using trendLine
+if <dataName>:
+    try:
+        _x = [float(_row.get(\'<xCol>\', 0)) for _row in <dataName>]
+        _y = [float(_row.get(\'<yCol>\', 0)) for _row in <dataName>]
+        
+        plt.figure(figsize=(10, 6))
+        plt.scatter(_x, _y, color=\'blue\', alpha=0.5, label=\'Data Points\')
+        
+        _m, _b = np.polyfit(_x, _y, 1)
+        _trend_y = [_m * xi + _b for xi in _x]
+        plt.plot(_x, _trend_y, color=\'red\', linewidth=2, label=\'Trend Line (OLS)\')
+        
+        plt.title(\'Scatter Plot with Trend Line: <xCol> vs <yCol>\', fontsize=16, pad=20)
+        plt.xlabel(\'<xCol>\', fontsize=12)
+        plt.ylabel(\'<yCol>\', fontsize=12)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(\'<dataName>_<xCol>_vs_<yCol>_trend.png\', dpi=150)
+        plt.close()
+        print(f\'Trend line plot saved to <dataName>_<xCol>_vs_<yCol>_trend.png\')
+    except Exception as e:
+        print(f\'Could not plot trendline for <xCol> vs <yCol>. Make sure both columns contain numeric data! Error: {e}\')
+else:
+    print(\'No data to display for <dataName>.\')
+";
 }

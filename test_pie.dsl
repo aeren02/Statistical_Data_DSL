@@ -6,3 +6,4 @@
 
 Load "python_sources/data.csv" as teammate_data
 Visualise teammate_data on Employment_status using barChart
+Visualise teammate_data on Gender using pieChart

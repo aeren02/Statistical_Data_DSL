@@ -15,6 +15,7 @@ data ASTCommand
   | groupByAgg(str source, str groupCol, ASTAggType aggType, str valueCol, ASTType valType)
   | visualisePie(str name, str col)
   | visualiseBar(str name, str col)
+  | visualiseTrend(str name, str xCol, str yCol)
   ;
 
 data ASTCondition

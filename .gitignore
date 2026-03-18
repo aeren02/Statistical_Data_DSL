@@ -5,3 +5,12 @@ python_sources/*.png
 __pycache__/
 *.class
 target
+
+# Ignore virtual environments
+myenv/
+
+# Ignore generated visualization images
+*.png
+
+# Ignore generated Python outputs
+output_*.py
