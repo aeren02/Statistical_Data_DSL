@@ -37,14 +37,14 @@ ASTCommand toAST(Element el) {
             return groupByCount("<src>", "<col>");
         case (Element)`GroupBy <Identifier src> by <Identifier col> <AggType agg> <Identifier valCol> (<RowType t>)`:
             return groupByAgg("<src>", "<col>", toAST(agg), "<valCol>", toAST(t));
-        case (Element)`LinearRegression <Identifier src> by <Identifier yVal> on <Identifier xVal>`:
-            return linReg("<src>","<yVal>", ["<xVal>"]);
-        case (Element)`LinearRegression <Identifier src> by <Identifier yVal> on { <Identifier* xVals> }`:
-            return multiLinReg("<src>","<yVal>", ["<xVals>"]);   
-              
+        case (Element)`Visualise <Identifier target> on <Identifier col> using pieChart`:
+            return visualisePie("<target>", "<col>");
+        case (Element)`Visualise <Identifier target> on <Identifier col> using barChart`:
+            return visualiseBar("<target>", "<col>");
         default: throw "Unknown Command Type";
     }
 }
+
 
 // inList condition
 ASTCondition toAST((Condition)`<Identifier col> (<RowType t>) in [<{Value ","}* vals>]`) {

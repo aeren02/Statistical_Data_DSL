@@ -20,14 +20,15 @@ str generate(ASTProgram program) {
             if (vt == "table") needsTabulate = true;
             if (vt == "table_image") needsMatplotlib = true;
         }
-        if ((cmd is LinReg) && (cmd is multiLinReg)) {
-            code += "import statsmodels.api as sm";
+        if (cmd is visualisePie) {
+            needsMatplotlib = true;
+        }
+        if (cmd is visualiseBar) {
+            needsMatplotlib = true;
         }
     }
 
-    if (needsTabulate){
-        code += "from tabulate import tabulate\n";
-    } 
+    if (needsTabulate) code += "from tabulate import tabulate\n";
     if (needsMatplotlib) {
         code += "import matplotlib\n";
         code += "matplotlib.use(\'Agg\')\n";
@@ -51,17 +52,17 @@ str genCommand(ASTCommand command) {
         case constrain(source, target, conditions): {
             return genConstrain(source, target, conditions);
         }
-        case linReg(source, yVal, xVals): {
-            return genLinReg(source, yVal, xVals);
-        }
-        case multiLinReg(source, yVal, xVals): {
-            return genLinReg(source, yVal, xVals);
-        }
         case visualise(name): {
             return genVisualise(name, "default");
         }
         case visualiseUsing(name, vizType): {
             return genVisualise(name, vizType);            
+        }
+        case visualisePie(name, col): {
+            return genVisualisePie(name, col);
+        }
+        case visualiseBar(name, col): {
+            return genVisualiseBar(name, col);
         }
         case rename(source, oldCol, newCol): {
             return genRename(source, oldCol, newCol);
@@ -80,26 +81,6 @@ str genCommand(ASTCommand command) {
         }
         default: throw "Unknown command when generating code";
     }
-}
-
-str genLinReg(str source,str yVal, list[str]  xVals) {
-    return "
-# X and Y values
-xValues=[]
-yValues=[]
-for _row in <source>:
-    yValues.append(_row[\'<yVal>\'])
-    xs=[]
-    for xVal in xVals:
-        xs.append(_row[\'<xVal>\'])
-    yValues.append(xs)
-# Intercept term
-X = sm.add_constant(xValues)
-# OLS model
-model = sm.OLS(yValues, xValues).fit()
-# Print summary
-print(model.summary())
-";
 }
 
 str genLoad(str path, str name) {
@@ -190,6 +171,62 @@ if <dataName>:
     plt.savefig(\'<dataName>_table.png\', dpi=150, bbox_inches=\'tight\')
     plt.close()
     print(\'Table image saved to <dataName>_table.png\')
+else:
+    print(\'No data to display for <dataName>.\')
+";
+}
+
+str genVisualisePie(str dataName, str col) {
+    return
+
+"
+# visualise <dataName> on <col> using pieChart
+if <dataName>:
+    _counts = {}
+    for _row in <dataName>:
+        _val = _row.get(\'<col>\', \'Unknown\')
+        _counts[_val] = _counts.get(_val, 0) + 1
+    
+    _labels = list(_counts.keys())
+    _sizes = list(_counts.values())
+    
+    plt.figure(figsize=(8, 8))
+    plt.pie(_sizes, labels=_labels, autopct=\'%1.1f%%\', startangle=140)
+    plt.title(\'Pie Chart of <col> in <dataName>\', fontsize=16, pad=20)
+    plt.axis(\'equal\')
+    plt.tight_layout()
+    plt.savefig(\'<dataName>_<col>_pie.png\', dpi=150)
+    plt.close()
+    print(\'Pie chart saved to <dataName>_<col>_pie.png\')
+else:
+    print(\'No data to display for <dataName>.\')
+";
+}
+
+str genVisualiseBar(str dataName, str col) {
+    return
+
+"
+# visualise <dataName> on <col> using barChart
+if <dataName>:
+    _counts = {}
+    for _row in <dataName>:
+        _val = _row.get(\'<col>\', \'Unknown\')
+        _counts[_val] = _counts.get(_val, 0) + 1
+    
+    _labels = list(_counts.keys())
+    _values = list(_counts.values())
+    
+    plt.figure(figsize=(10, 6))
+    plt.bar(_labels, _values, color=\'skyblue\', edgecolor=\'black\')
+    plt.title(\'Bar Chart of <col> in <dataName>\', fontsize=16, pad=20)
+    plt.xlabel(\'<col>\', fontsize=12)
+    plt.ylabel(\'Count\', fontsize=12)
+    plt.xticks(rotation=45, ha=\'right\')
+    plt.tight_layout()
+    plt.savefig(\'<dataName>_<col>_bar.png\', dpi=150)
+    plt.close()
+    print(\'Bar chart saved to <dataName>_<col>_bar.png\')
 else:
     print(\'No data to display for <dataName>.\')
 ";
@@ -385,4 +422,3 @@ str getAggName(ASTAggType aggType) {
         default: throw "Unknown aggregation type";
     }
 }
-

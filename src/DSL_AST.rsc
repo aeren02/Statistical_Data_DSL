@@ -13,8 +13,8 @@ data ASTCommand
   | sortDesc(str source, str col, ASTType t)
   | groupByCount(str source, str groupCol)
   | groupByAgg(str source, str groupCol, ASTAggType aggType, str valueCol, ASTType valType)
-  | linReg(str source, str yVal, list[str] xVals)
-  | multiLinReg(str source, str yVal, list[str] xVals)
+  | visualisePie(str name, str col)
+  | visualiseBar(str name, str col)
   ;
 
 data ASTCondition

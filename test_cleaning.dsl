@@ -18,7 +18,7 @@ Constrain employee_data as cleaned_data {
     Age (int) < 40
     Pets (bool) keep
 }
- 
+
 // step 3: rename a column
 Rename cleaned_data column "Employment_status" to "Role"
 

@@ -13,8 +13,8 @@ syntax Element
   | sortDesc: "Sort" Identifier "by" Identifier "(" RowType ")" "descending"
   | groupByCount: "GroupBy" Identifier "by" Identifier "count"
   | groupByAgg: "GroupBy" Identifier "by" Identifier AggType Identifier "(" RowType ")" 
-  | linearRegression: "LinearRegression" Identifier "by" Identifier "on" Identifier
-  | multiLinearRegression: "LinearRegression" Identifier "by" Identifier "on" "{" Identifier* "}"
+  | visualisePie: "Visualise" Identifier "on" Identifier "using" "pieChart"
+  | visualiseBar: "Visualise" Identifier "on" Identifier "using" "barChart"
   ;
 
 lexical Identifier
