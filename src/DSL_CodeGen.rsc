@@ -31,6 +31,9 @@ str generate(ASTProgram program) {
             needsMatplotlib = true;
             needsNumpy = true;
         }
+        if ((cmd is linReg) && (cmd is multiLinReg)) {
+            code += "import statsmodels.api as sm";
+        }
     }
 
     if (needsTabulate) code += "from tabulate import tabulate\n";
@@ -59,6 +62,12 @@ str genCommand(ASTCommand command) {
         }
         case constrain(source, target, conditions): {
             return genConstrain(source, target, conditions);
+        }
+        case linReg(source, yVal, xVals): {
+            return genLinReg(source, yVal, xVals);
+        }
+        case multiLinReg(source, yVal, xVals): {
+            return genLinReg(source, yVal, xVals);
         }
         case visualise(name): {
             return genVisualise(name, "default");
@@ -92,6 +101,25 @@ str genCommand(ASTCommand command) {
         }
         default: throw "Unknown command when generating code";
     }
+}
+str genLinReg(str source,str yVal, list[str]  xVals) {
+    return "
+# X and Y values
+xValues=[]
+yValues=[]
+for _row in <source>:
+    yValues.append(_row[\'<yVal>\'])
+    xs=[]
+    for xVal in xVals:
+        xs.append(_row[\'<xVals>\'])
+    yValues.append(xs)
+# Intercept term
+X = sm.add_constant(xValues)
+# OLS model
+model = sm.OLS(yValues, xValues).fit()
+# Print summary
+print(model.summary())
+";
 }
 
 str genLoad(str path, str name) {

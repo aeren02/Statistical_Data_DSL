@@ -43,10 +43,13 @@ ASTCommand toAST(Element el) {
             return visualiseBar("<target>", "<col>");
         case (Element)`Visualise <Identifier target> on <Identifier xCol> vs <Identifier yCol> using trendLine`:
             return visualiseTrend("<target>", "<xCol>", "<yCol>");
+        case (Element)`LinearRegression <Identifier src> by <Identifier yVal> on <Identifier xVal>`:
+            return linReg("<src>","<yVal>", ["<xVal>"]);
+        case (Element)`LinearRegression <Identifier src> by <Identifier yVal> on { <Identifier* xVals> }`:
+            return multiLinReg("<src>","<yVal>", ["<xVals>"]);
         default: throw "Unknown Command Type";
     }
 }
-
 
 // inList condition
 ASTCondition toAST((Condition)`<Identifier col> (<RowType t>) in [<{Value ","}* vals>]`) {

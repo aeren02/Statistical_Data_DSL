@@ -16,6 +16,8 @@ data ASTCommand
   | visualisePie(str name, str col)
   | visualiseBar(str name, str col)
   | visualiseTrend(str name, str xCol, str yCol)
+  | linReg(str source, str yVal, list[str] xVals)
+  | multiLinReg(str source, str yVal, list[str] xVals)
   ;
 
 data ASTCondition

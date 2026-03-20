@@ -16,6 +16,8 @@ syntax Element
   | visualisePie: "Visualise" Identifier "on" Identifier "using" "pieChart"
   | visualiseBar: "Visualise" Identifier "on" Identifier "using" "barChart"
   | visualiseTrend: "Visualise" Identifier "on" Identifier "vs" Identifier "using" "trendLine"
+  | linearRegression: "LinearRegression" Identifier "by" Identifier "on" Identifier
+  | multiLinearRegression: "LinearRegression" Identifier "by" Identifier "on" "{" Identifier* "}"
   ;
 
 lexical Identifier
