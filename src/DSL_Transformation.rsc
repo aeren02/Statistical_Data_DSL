@@ -23,6 +23,8 @@ ASTCommand toAST(Element el) {
             return load("<stripQuotes(s)>", "<id>");
         case (Element)`Constrain <Identifier from_id> as <Identifier to_id> { <Condition* conds> }`:
             return constrain("<from_id>", "<to_id>", [toAST(c) | c <- conds]);
+//        case (Element)`Constrain as <Identifier to_id> { <Condition* conds> }`:
+//            return constrain("defaultName", "<to_id>", [toAST(c) | c <- conds]);
         case (Element)`Visualise <Identifier target>`:
             return visualise("<target>");
         case (Element)`Visualise <Identifier target> using <Identifier template>`:
@@ -45,8 +47,8 @@ ASTCommand toAST(Element el) {
             return visualiseTrend("<target>", "<xCol>", "<yCol>");
         case (Element)`LinearRegression <Identifier src> by <Identifier yVal> on <Identifier xVal>`:
             return linReg("<src>","<yVal>", ["<xVal>"]);
-        case (Element)`LinearRegression <Identifier src> by <Identifier yVal> on { <Identifier* xVals> }`:
-            return multiLinReg("<src>","<yVal>", ["<xVals>"]);
+        case (Element)`LinearRegression <Identifier src> by <Identifier yVal> on { <Id* xVals> }`:
+            return multiLinReg("<src>","<yVal>",["<x>" | x <- xVals ]);
         default: throw "Unknown Command Type";
     }
 }

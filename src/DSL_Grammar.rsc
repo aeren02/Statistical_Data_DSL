@@ -6,6 +6,7 @@ start syntax DSL
 syntax Element
   = load: "Load" String "as" Identifier
   | constrain: "Constrain" Identifier "as" Identifier "{" Condition* "}"
+  //| constraind: "Constrain as" Identifier "{" Condition* "}"
   | visualise: "Visualise" Identifier
   | visualiseUsing: "Visualise" Identifier "using" Identifier
   | rename: "Rename" Identifier "column" String "to" String
@@ -17,9 +18,10 @@ syntax Element
   | visualiseBar: "Visualise" Identifier "on" Identifier "using" "barChart"
   | visualiseTrend: "Visualise" Identifier "on" Identifier "vs" Identifier "using" "trendLine"
   | linearRegression: "LinearRegression" Identifier "by" Identifier "on" Identifier
-  | multiLinearRegression: "LinearRegression" Identifier "by" Identifier "on" "{" Identifier* "}"
+  | multiLinearRegression: "LinearRegression" Identifier "by" Identifier "on" "{" Id* "}"
   ;
-
+lexical Id
+= ([a-zA-Z]!<<[a-zA-Z][a-zA-Z0-9_]*!>>[a-zA-Z0-9_]);
 lexical Identifier
   = [a-zA-Z_][a-zA-Z0-9_]*;
 

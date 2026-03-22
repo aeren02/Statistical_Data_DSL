@@ -110,9 +110,9 @@ yValues=[]
 for _row in <source>:
     yValues.append(_row[\'<yVal>\'])
     xs=[]
-    for xVal in xVals:
-        xs.append(_row[\'<xVals>\'])
-    yValues.append(xs)
+    for xVal in <xVals>:
+        xs.append(_row[xVal])
+    xValues.append(xs)
 # Intercept term
 X = sm.add_constant(xValues)
 # OLS model
