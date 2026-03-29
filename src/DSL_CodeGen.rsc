@@ -14,28 +14,28 @@ str generate(ASTProgram program) {
     bool needsSm = false;
     bool needsLoading = true;
     for (cmd <- program.commands) {
-        if (cmd is visualise) {
+        if ((cmd is visualise)|| (cmd is visualiseD)) {
             needsTabulate = true;
         }
-        if (cmd is visualiseUsing) {
+        if ((cmd is visualiseUsing)|| (cmd is visualiseUsingD)) {
             str vt = cmd.vizType;
             if (vt == "table") needsTabulate = true;
             if (vt == "table_image") needsMatplotlib = true;
         }
-        if (cmd is visualisePie) {
+        if ((cmd is visualisePie)|| (cmd is visualisePieD)) {
             needsMatplotlib = true;
         }
-        if (cmd is visualiseBar) {
+        if ((cmd is visualiseBar)|| (cmd is visualiseBarD)) {
             needsMatplotlib = true;
         }
-        if (cmd is visualiseTrend) {
+        if ((cmd is visualiseTrend)|| (cmd is visualiseTrendD)) {
             needsMatplotlib = true;
             needsNumpy = true;
         }
-        if ((cmd is linReg) && (cmd is multiLinReg)) {
+        if ((cmd is linReg) || (cmd is multiLinReg)|| (cmd is linRegD)|| (cmd is multiLinRegD)) {
             needsSm = true;
         }
-        if (cmd is visualiseTrend) {
+        if ((cmd is visualiseTrend)|| (cmd is visualiseTrendD)) {
             needsMatplotlib = true;
             needsNumpy = true;
         }
@@ -169,10 +169,10 @@ str genLinReg(str source,str yVal, list[str]  xVals) {
 xValues=[]
 yValues=[]
 for _row in <source>:
-    yValues.append(_row[\'<yVal>\'])
+    yValues.append(float(_row[\'<yVal>\']))
     xs=[]
     for xVal in <xVals>:
-        xs.append(_row[xVal])
+        xs.append(float(_row[xVal]))
     xValues.append(xs)
 # Intercept term
 X = sm.add_constant(xValues)
