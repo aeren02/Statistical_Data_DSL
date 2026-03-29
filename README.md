@@ -6,7 +6,7 @@ To test current stage:
 3. call testDSL() with the raascal path of the test file and an output file for the codegen. get them by right clicking on the file using vscode file explorer.
     - basic test: testDSL(|file:///path/to/test.dsl|, |file:///path/to/python_sources/test.py|)
     - full cleaning test: testDSL(|file:///path/to/test_cleaning.dsl|, |file:///path/to/python_sources/test_cleaning.py|)
-4. install Python dependencies: pip install tabulate matplotlib
+4. install Python dependencies: pip install tabulate matplotlib numpy statsmodels
 5. To test python code corectness, go to python_sources/ and run:
     - python3 example_dsl.py and python3 test.py —> output should match
     - python3 example_cleaning.py and python3 test_cleaning.py -> output should match
