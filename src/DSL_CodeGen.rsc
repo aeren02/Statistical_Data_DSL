@@ -169,10 +169,10 @@ str genLinReg(str source,str yVal, list[str]  xVals) {
 xValues=[]
 yValues=[]
 for _row in <source>:
-    yValues.append(float(_row[\'<yVal>\']))
+    yValues.append( float(_row[\'<yVal>\']) if (_row[\'<yVal>\']!=\"\" ) else 0.0 )
     xs=[]
     for xVal in <xVals>:
-        xs.append(float(_row[xVal]))
+        xs.append(float(_row[xVal]) if (_row[xVal]!=\"\") else 0.0)
     xValues.append(xs)
 # Intercept term
 X = sm.add_constant(xValues)
