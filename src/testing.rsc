@@ -22,7 +22,7 @@ void testDSL(loc file, loc target) {
     ASTProgram cmd = toAST(dsl);
     println("Abstract syntax tree:");
     println("____________________________________");
-    println(cmd);
+    iprintln(cmd);
     println("____________________________________");
 
     // Static Semantic Validation
